@@ -1,0 +1,2 @@
+default._domainkey	IN	TXT	( "v=DKIM1; k=rsa; "
+	  "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCV4LSJO6usXAmMPXadb2r/O1oKJrJStPDarXavRYMZerdo827C/z08PUKFJmfGaZVjwODUn2euaDKbhYDovLmNKC8GP2CnvDz/l9FMEUc7TuEjfoCJV34kvbOhdCkF3SpRy4YPmlJV2xDh8K7+dhlrbHODxQ6v3y7iGaNdbF4MIQIDAQAB" )  ; ----- DKIM key default for mail.wuchuheng.com

@@ -7,31 +7,31 @@ x-logging: &default-logging
       max-file: "3"
 
 services:
-  # postfix:
-  #   build: 
-  #     context: ./src/postfix
-  #     dockerfile: Dockerfile
-  #   image: my-postfix:latest
-  #   container_name: postfix
-  #   hostname: mail.wuchuheng.com
-  #   <<: *default-logging    # 使用通用日志配置
-  #   ports:
-  #     - "25:25"
-  #     - "587:587"
-  #   volumes:
-  #     - ./src/postfix/config/main.cf:/etc/postfix/main.cf
-  #     - ./data:/var/mail
-  #     - ./src/letsencrypt/:/etc/letsencrypt/:ro
-  #     - ./runtime/logs/postifix/:/var/log/
-  #     - ./src/postfix/start-postfix.sh:/start-postfix.sh
-  #     - ./runtime/sockets/mail-services:/var/spool/postfix/private
-  #   restart: always
-  #   networks:
-  #     - mailnet
-  #   depends_on:
-  #     - dkmi
-  #   command: ["/bin/sh", "/start-postfix.sh"]
-  #   user: root
+  postfix:
+    build: 
+      context: ./src/postfix
+      dockerfile: Dockerfile
+    image: my-postfix:latest
+    container_name: postfix
+    hostname: mail.wuchuheng.com
+    <<: *default-logging    # 使用通用日志配置
+    ports:
+      - "25:25"
+      - "587:587"
+    volumes:
+      - ./src/postfix/config/main.cf:/etc/postfix/main.cf
+      - ./data:/var/mail
+      - ./src/letsencrypt/:/etc/letsencrypt/:ro
+      - ./runtime/logs/postifix/:/var/log/
+      - ./src/postfix/start-postfix.sh:/start-postfix.sh
+      - ./runtime/sockets/mail-services:/var/spool/postfix/private
+    restart: always
+    networks:
+      - mailnet
+    depends_on:
+      - dkmi
+    command: ["/bin/sh", "/start-postfix.sh"]
+    user: root
 
   dkmi:
     image: instrumentisto/opendkim:alpine
@@ -45,7 +45,7 @@ services:
       - ./src/dkmi/keys/:/etc/opendkim/keys/
     # Execute the start-dkmi.sh script when the container starts.
     command: ["/bin/sh", "/start-dkmi.sh"]
-
+    
   # dovecot:
   #   build:
   #     context: ./src/dovecot

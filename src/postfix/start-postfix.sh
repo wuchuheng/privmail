@@ -17,9 +17,17 @@ chown root:root /etc/postfix/main.cf
 
 # Create and set permissions for the private directory
 mkdir -p /var/spool/postfix/private
-chown -R postfix:postfix /var/spool/postfix
 chmod 710 /var/spool/postfix/private
+chown -R postfix:postfix /var/spool/postfix
+# 3. Set correct ownership for Postfix directories
+chown -R postfix:postdrop /var/spool/postfix/public
+chown -R root /var/spool/postfix/pid
+chmod -R 750 /var/spool/postfix/public
+chmod -R 750 /var/spool/postfix/maildrop
+
+chown -R postfix:postdrop /var/spool/postfix/maildrop
+ls -ahl /var/spool/postfix/maildrop
+chmod -R 750 /var/spool/postfix/pid
 
 # Start Postfix
 /usr/sbin/postfix start-fg
-

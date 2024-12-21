@@ -44,6 +44,8 @@ services:
       - ./src/dkmi/start-dkmi.sh:/start-dkmi.sh
       - ./src/dkmi/keys/:/etc/opendkim/keys/
     command: ["/bin/sh", "/start-dkmi.sh"]
+    networks:
+      - mailnet
 
   dovecot:
     build:

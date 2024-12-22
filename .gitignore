@@ -1,3 +1,5 @@
 src/letsencrypt/
 runtime/
 !runtime/.gitkeep
+
+.env

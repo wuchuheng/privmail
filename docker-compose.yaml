@@ -1,80 +1,85 @@
-# 定义通用的日志配置
-x-logging: &default-logging
+version: "3.8"
+
+x-common-env: &common_env
+  DOMAIN: ${DOMAIN:-example.com}
+
+x-common-config: &common-config
+  user: "${UID:-1000}:${GID:-1000}"
   logging:
     driver: "json-file"
     options:
       max-size: "10m"
       max-file: "3"
+  hostname: mail.wuchuheng.com
 
 services:
-  postfix:
-    build: 
-      context: ./src/postfix
-      dockerfile: Dockerfile
-    image: my-postfix:latest
-    container_name: postfix
-    hostname: mail.wuchuheng.com
-    <<: *default-logging    # 使用通用日志配置
-    ports:
-      - "25:25"
-      - "587:587"
-    volumes:
-      - ./src/postfix/config/main.cf:/etc/postfix/main.cf
-      - ./data:/var/mail
-      - ./src/letsencrypt/:/etc/letsencrypt/:ro
-      - ./runtime/logs/postifix/:/var/log/
-      - ./src/postfix/start-postfix.sh:/start-postfix.sh
-      - ./runtime/sockets/mail-services:/var/spool/postfix/private
-      - ./data/vmaps:/etc/postfix/vmaps
-    restart: always
-    networks:
-      - mailnet
-    depends_on:
-      - dkmi
-    command: ["/bin/sh", "/start-postfix.sh"]
-    user: root
+  # postfix:
+  #   build: 
+  #     context: ./src/postfix
+  #     dockerfile: Dockerfile
+  #   image: my-postfix:latest
+  #   container_name: postfix
+  #   # Allow binding to privileged ports that are less than 1024.
+  #   cap_add:
+  #     - NET_BIND_SERVICE
+  #   <<: *common-config
+  #   ports:
+  #     - "25:25"
+  #     - "587:587"
+  #   volumes:
+  #     - ./src/postfix/config/main.cf:/etc/postfix/main.cf
+  #     - ./data:/var/mail
+  #     - ./src/letsencrypt/:/etc/letsencrypt/:ro
+  #     - ./runtime/logs/postifix/:/var/log/
+  #     - ./src/postfix/start-postfix.sh:/start-postfix.sh
+  #     - ./runtime/sockets/mail-services:/var/spool/postfix/private
+  #     - ./data/vmaps:/etc/postfix/vmaps
+  #   restart: always
+  #   networks:
+  #     - mailnet
+  #   depends_on:
+  #     - dkmi
+  #   command: ["/bin/sh", "/start-postfix.sh"]
 
   dkmi:
     image: instrumentisto/opendkim:alpine
     container_name: dkmi
-    hostname: mail.wuchuheng.com
     ports:
       - "8891:8891"
     volumes:
-      - ./src/dkmi/config/opendkmi.config:/etc/opendkim/opendkim.conf
       - ./src/dkmi/start-dkmi.sh:/start-dkmi.sh
       - ./src/dkmi/keys/:/etc/opendkim/keys/
-    command: ["/bin/sh", "/start-dkmi.sh"]
     networks:
       - mailnet
-    init: true
+    <<: *common-config
+    entrypoint: ["/bin/sh", "/start-dkmi.sh"]
+    environment:
+      <<: *common_env
 
-  dovecot:
-    build:
-      context: ./src/dovecot
-      dockerfile: Dockerfile
-    image: my-dovecot:latest
-    container_name: dovecot
-    hostname: mail.wuchuheng.com
-    <<: *default-logging    # 使用通用日志配置
-    ports:
-      - "110:110"
-      - "143:143"
-      - "993:993"
-      - "995:995"
-    volumes:
-      - ./data:/var/mail
-      - ./src/dovecot/start-dovecot.sh:/start-dovecot.sh
-      - ./src/dovecot/config/:/etc/dovecot/
-      - ./src/letsencrypt/live/mail.wuchuheng.com/fullchain.pem:/etc/ssl/dovecot/fullchain.pem
-      - ./src/letsencrypt/live/mail.wuchuheng.com/privkey.pem:/etc/ssl/dovecot/privkey.pem
-      - ./runtime/sockets/mail-services:/var/spool/postfix/private
-    restart: always
-    networks:
-      - mailnet
-    command: ["/bin/sh", "/start-dovecot.sh"]
-    init: true
-    user: root
+  # dovecot:
+  #   build:
+  #     context: ./src/dovecot
+  #     dockerfile: Dockerfile
+  #   image: my-dovecot:latest
+  #   container_name: dovecot
+  #   <<: *common-config
+  #   ports:
+  #     - "110:110"
+  #     - "143:143"
+  #     - "993:993"
+  #     - "995:995"
+  #   volumes:
+  #     - ./data:/var/mail
+  #     - ./src/dovecot/start-dovecot.sh:/start-dovecot.sh
+  #     - ./src/dovecot/config/:/etc/dovecot/
+  #     - ./src/letsencrypt/live/mail.wuchuheng.com/fullchain.pem:/etc/ssl/dovecot/fullchain.pem
+  #     - ./src/letsencrypt/live/mail.wuchuheng.com/privkey.pem:/etc/ssl/dovecot/privkey.pem
+  #     - ./runtime/sockets/mail-services:/var/spool/postfix/private
+  #   restart: always
+  #   networks:
+  #     - mailnet
+  #   command: ["/bin/sh", "/start-dovecot.sh"]
+  #   init: true
 
 networks:
   mailnet:

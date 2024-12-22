@@ -25,6 +25,7 @@ services:
       - ./runtime/logs/postifix/:/var/log/
       - ./src/postfix/start-postfix.sh:/start-postfix.sh
       - ./runtime/sockets/mail-services:/var/spool/postfix/private
+      - ./data/vmaps:/etc/postfix/vmaps
     restart: always
     networks:
       - mailnet
@@ -46,6 +47,7 @@ services:
     command: ["/bin/sh", "/start-dkmi.sh"]
     networks:
       - mailnet
+    init: true
 
   dovecot:
     build:
@@ -71,6 +73,7 @@ services:
     networks:
       - mailnet
     command: ["/bin/sh", "/start-dovecot.sh"]
+    init: true
     user: root
 
 networks:

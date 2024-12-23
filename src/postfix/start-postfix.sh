@@ -12,7 +12,7 @@ env_check MAIL_UID MAIL_GID MAIL_USER_NAME || exit 1
 user_exists_or_create ${MAIL_USER_NAME} ${MAIL_UID} || exit 1
 
 # 3. Convert the template to the main.cf file
-envsubst < ${DIR}/config/main.cf.template > /etc/postfix/main.cf
+# envsubst < ${DIR}/config/main.cf.template > /etc/postfix/main.cf
 
 # 4. Start Postfix
 /usr/sbin/postfix start-fg -v

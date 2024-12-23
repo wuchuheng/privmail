@@ -12,7 +12,14 @@ env_check MAIL_UID MAIL_GID MAIL_USER_NAME || exit 1
 user_exists_or_create ${MAIL_USER_NAME} ${MAIL_UID} || exit 1
 
 # 3. Convert the template to the main.cf file
-# envsubst < ${DIR}/config/main.cf.template > /etc/postfix/main.cf
+envsubst < ${DIR}/config/main.cf.template > /etc/postfix/main.cf
 
-# 4. Start Postfix
+# 4. Set correct permissions for Postfix directories
+postfix_dirs="/var/spool/postfix /var/lib/postfix"
+for dir in $postfix_dirs; do
+    chown -R ${MAIL_USER_NAME}:${MAIL_USER_NAME} $dir
+    chmod -R 0700 $dir
+done
+
+# 5. Start Postfix
 /usr/sbin/postfix start-fg -v

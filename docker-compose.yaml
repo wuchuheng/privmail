@@ -10,7 +10,6 @@ x-common-config: &common-config
     options:
       max-size: "10m"
       max-file: "3"
-  hostname: mail.wuchuheng.com
 
 services:
   # postfix:

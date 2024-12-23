@@ -66,7 +66,6 @@ main() {
     TEMP_CONFIG=$(generate_config "$DOMAIN" "$PRIVATE_KEY_FILE")
     trap 'rm -f "$TEMP_CONFIG"' EXIT
 
-    echo "tmpenv: $DOMAIN"
     # 3. Start OpenDKIM.
     opendkim -f -x "$TEMP_CONFIG" -v
     if [ $? -ne 0 ]; then

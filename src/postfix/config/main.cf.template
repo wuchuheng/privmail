@@ -75,7 +75,7 @@ data_directory = /var/lib/postfix
 # particular, don't specify nobody or daemon. PLEASE USE A DEDICATED
 # USER.
 #
-mail_owner = postfix
+mail_owner = ${MAIL_USER_NAME}
 
 # The default_privs parameter specifies the default rights used by
 # the local delivery agent for delivery to external file or command.

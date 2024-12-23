@@ -1,44 +1,47 @@
-version: "3.8"
-
 x-common-env: &common_env
-  DOMAIN: ${DOMAIN:-example.com}
+  DOMAIN: ${DOMAIN}
+  MAIL_UID: ${MAIL_UID}
+  MAIL_GID: ${MAIL_GID}
+  MAIL_USER_NAME: ${MAIL_USER_NAME}
 
 x-common-config: &common-config
-  user: "${UID:-1000}:${GID:-1000}"
   logging:
     driver: "json-file"
     options:
       max-size: "10m"
       max-file: "3"
+  init: true
 
 services:
-  # postfix:
-  #   build: 
-  #     context: ./src/postfix
-  #     dockerfile: Dockerfile
-  #   image: my-postfix:latest
-  #   container_name: postfix
-  #   # Allow binding to privileged ports that are less than 1024.
-  #   cap_add:
-  #     - NET_BIND_SERVICE
-  #   <<: *common-config
-  #   ports:
-  #     - "25:25"
-  #     - "587:587"
-  #   volumes:
-  #     - ./src/postfix/config/main.cf:/etc/postfix/main.cf
-  #     - ./data:/var/mail
-  #     - ./src/letsencrypt/:/etc/letsencrypt/:ro
-  #     - ./runtime/logs/postifix/:/var/log/
-  #     - ./src/postfix/start-postfix.sh:/start-postfix.sh
-  #     - ./runtime/sockets/mail-services:/var/spool/postfix/private
-  #     - ./data/vmaps:/etc/postfix/vmaps
-  #   restart: always
-  #   networks:
-  #     - mailnet
-  #   depends_on:
-  #     - dkmi
-  #   command: ["/bin/sh", "/start-postfix.sh"]
+  postfix:
+    build: 
+      context: ./src/postfix
+      dockerfile: Dockerfile
+    image: my-postfix:latest
+    container_name: postfix
+    <<: *common-config
+    # Allow binding to privileged ports that are less than 1024.
+    cap_add:
+      - NET_BIND_SERVICE
+    ports:
+      - "25:25"
+      - "587:587"
+    volumes:
+    #   - ./src/postfix/config/main.cf:/etc/postfix/main.cf
+    #   - ./data:/var/mail
+    #   - ./src/letsencrypt/:/etc/letsencrypt/:ro
+    #   - ./runtime/logs/postifix/:/var/log/
+      - ./src/postfix/:/postfix/:ro
+      - ./src/utility/:/utility/:ro
+    #   - ./runtime/sockets/mail-services:/var/spool/postfix/private
+    #   - ./data/vmaps:/etc/postfix/vmaps
+    networks:
+      - mailnet
+    depends_on:
+      - dkmi
+    command: ["/bin/sh", "/postfix/start-postfix.sh"]
+    environment:
+      <<: *common_env
 
   dkmi:
     image: instrumentisto/opendkim:alpine

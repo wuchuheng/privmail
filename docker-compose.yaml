@@ -1,8 +1,6 @@
 x-common-env: &common_env
   MAIL_DOMAIN: ${MAIL_DOMAIN}
   MAIL_UID: ${MAIL_UID}
-  MAIL_GID: ${MAIL_GID}
-  MAIL_USER_NAME: ${MAIL_USER_NAME}
 
 x-common-config: &common-config
   logging:

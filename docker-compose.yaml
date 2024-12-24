@@ -27,7 +27,8 @@ services:
     volumes:
     #   - ./data:/var/mail
       - ./:/app/:ro
-      - ./src/postfix/config/aliases:/etc/postfix/aliases:ro # Alias database.
+      - ./src/postfix/vmaps:/etc/postfix/vmaps
+      #- ./src/postfix/config/aliases:/etc/postfix/aliases
     #   - ./runtime/sockets/mail-services:/var/spool/postfix/private
     #   - ./data/vmaps:/etc/postfix/vmaps
     networks:

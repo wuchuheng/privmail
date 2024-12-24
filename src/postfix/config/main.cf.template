@@ -692,10 +692,6 @@ smtpd_tls_mandatory_ciphers = high
 smtpd_tls_loglevel = 1
 smtp_tls_loglevel = 1
 
-# Enable TLS session cache.
-smtpd_tls_session_cache_database = hash:${data_directory}/smtpd_scache
-smtp_tls_session_cache_database = hash:${data_directory}/smtp_scache
-
 # Force TLS (optional).
 # smtpd_use_tls = yes
 # smtpd_tls_auth_only = yes
@@ -704,5 +700,7 @@ smtp_tls_session_cache_database = hash:${data_directory}/smtp_scache
 notify_classes = bounce, delay, policy, protocol, resource, software
 
 # Alias database.
-alias_database = hash:/etc/postfix/aliases
-alias_maps = hash:/etc/postfix/aliases
+alias_maps =lmdb:/etc/postfix/aliases
+alias_database =lmdb:/etc/postfix/aliases
+
+# virtual_mailbox_maps =lmdb:/etc/postfix/vmaps

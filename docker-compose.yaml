@@ -25,19 +25,16 @@ services:
       - "25:25"
       - "587:587"
     volumes:
-    #   - ./src/postfix/config/main.cf:/etc/postfix/main.cf
     #   - ./data:/var/mail
-    #   - ./src/letsencrypt/:/etc/letsencrypt/:ro
-    #   - ./runtime/logs/postifix/:/var/log/
-      - ./src/postfix/:/postfix/:ro
-      - ./src/utility/:/utility/:ro
+      - ./:/app/:ro
+      - ./src/postfix/config/aliases:/etc/postfix/aliases:ro # Alias database.
     #   - ./runtime/sockets/mail-services:/var/spool/postfix/private
     #   - ./data/vmaps:/etc/postfix/vmaps
     networks:
       - mailnet
     depends_on:
       - dkmi
-    command: ["/bin/sh", "/postfix/start-postfix.sh"]
+    command: ["/bin/sh", "/app/src/postfix/start-postfix.sh"]
     environment:
       <<: *common_env
 

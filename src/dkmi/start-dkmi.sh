@@ -52,7 +52,7 @@ EOF
 
 # Main execution
 main() {
-    log "INFO" "Starting OpenDKIM setup for domain $DOMAIN."
+    log "INFO" "Starting OpenDKIM setup for domain $MAIL_DOMAIN."
 
     # 1. Generate the private key.
     PRIVATE_KEY_FILE="/etc/opendkim/keys/$DOMAIN/default.private"

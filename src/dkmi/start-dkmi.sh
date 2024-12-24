@@ -52,18 +52,18 @@ EOF
 
 # Main execution
 main() {
-    log "INFO" "Starting OpenDKIM setup for domain $MAIL_DOMAIN."
+    log "INFO" "Starting OpenDKIM setup for domain ${MAIL_DOMAIN}."
 
     # 1. Generate the private key.
-    PRIVATE_KEY_FILE="/etc/opendkim/keys/$DOMAIN/default.private"
+    PRIVATE_KEY_FILE="/etc/opendkim/keys/${MAIL_DOMAIN}/default.private"
     if [ ! -f "$PRIVATE_KEY_FILE" ]; then
-        generate_private_key "$DOMAIN" "$PRIVATE_KEY_FILE"
+        generate_private_key "$MAIL_DOMAIN" "$PRIVATE_KEY_FILE"
     else
         log "INFO" "Private key already exists at $PRIVATE_KEY_FILE."
     fi
 
     # 2. Generate the temporary configuration file.
-    TEMP_CONFIG=$(generate_config "$DOMAIN" "$PRIVATE_KEY_FILE")
+    TEMP_CONFIG=$(generate_config "$MAIL_DOMAIN" "$PRIVATE_KEY_FILE")
     trap 'rm -f "$TEMP_CONFIG"' EXIT
 
     # 3. Start OpenDKIM.

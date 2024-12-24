@@ -49,12 +49,13 @@ services:
     ports:
       - "8891:8891"
     volumes:
-      - ./src/dkmi/start-dkmi.sh:/start-dkmi.sh
       - ./src/dkmi/keys/:/etc/opendkim/keys/
+      - ./src/utility/:/utility/:ro
+      - ./src/dkmi/:/dkmi/
     networks:
       - mailnet
     <<: *common-config
-    entrypoint: ["/bin/sh", "/start-dkmi.sh"]
+    entrypoint: ["/bin/sh", "/dkmi/start-dkmi.sh"]
     environment:
       <<: *common_env
 

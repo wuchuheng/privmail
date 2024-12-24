@@ -1,14 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-# Logging function with timestamp and level
-log() {
-    local level message
-    level="$1"
-    shift
-    message="$@"
-    echo "$(date '+%Y-%m-%d %H:%M:%S') [$level] $message"
-}
+# Import ../utility/utility.sh using a relative path
+DIR="$(cd "$(dirname "$0")" && pwd)"
+. "${DIR}/../utility/utility.sh"
 
 # Generate Private Key
 generate_private_key() {

@@ -92,14 +92,14 @@ mail_owner = ${MAIL_USER_NAME}
 # other configuration parameters.
 #
 #myhostname = host.domain.tld
-#myhostname = virtual.domain.tld
+myhostname = mail.${MAIL_DOMAIN}
 
 # The mydomain parameter specifies the local internet domain name.
 # The default is to use $myhostname minus the first component.
 # $mydomain is used as a default value for many other configuration
 # parameters.
 #
-#mydomain = domain.tld
+mydomain = ${MAIL_DOMAIN}
 
 # SENDING MAIL
 #
@@ -115,7 +115,7 @@ mail_owner = ${MAIL_USER_NAME}
 # to recipient addresses that have no @domain part.
 #
 #myorigin = $myhostname
-#myorigin = $mydomain
+myorigin = ${MAIL_DOMAIN}
 
 # RECEIVING MAIL
 
@@ -129,7 +129,7 @@ mail_owner = ${MAIL_USER_NAME}
 #
 # Note: you need to stop/start Postfix when this parameter changes.
 #
-#inet_interfaces = all
+inet_interfaces = all
 #inet_interfaces = $myhostname
 #inet_interfaces = $myhostname, localhost
 
@@ -179,6 +179,7 @@ mail_owner = ${MAIL_USER_NAME}
 #mydestination = $myhostname, localhost.$mydomain, localhost
 #mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
 #mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain,
+mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
 #	mail.$mydomain, www.$mydomain, ftp.$mydomain
 
 # REJECTING MAIL FOR UNKNOWN LOCAL USERS

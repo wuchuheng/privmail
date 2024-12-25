@@ -3,3 +3,5 @@ runtime/
 !runtime/.gitkeep
 
 .env
+deploy.sh
+mail-server.tar.gz

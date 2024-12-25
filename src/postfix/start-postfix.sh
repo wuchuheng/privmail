@@ -24,15 +24,17 @@ vmaps_file="/etc/postfix/vmaps"
 vmaps_db_file="${vmaps_file}.lmdb"
 if [ ! -f "$vmaps_db_file" ]; then
     # Ensure proper permissions on the directory
-    chown postfix:postfix /etc/postfix
+    chown root:root -R /etc/postfix
     chmod 755 /etc/postfix
     
     # Generate the database as postfix user
     postmap $vmaps_file
-    [ $? -eq 0 ] && log INFO "Generated the vmaps.lmdb file." || log ERROR "Failed to generate the vmaps.lmdb file."
-    
-    # Make the permissions as root:root to avoid the permission warning from Postfix when starting.
-    chown root:root -R /etc/postfix
+    if [ $? -eq 0 ]; then
+        log INFO "Generated the vmaps.lmdb file."
+        # Make the permissions as root:root to avoid the permission warning from Postfix when starting.
+    else
+        log ERROR "Failed to generate the vmaps.lmdb file."
+    fi
 fi
 
 # 6. Start Postfix

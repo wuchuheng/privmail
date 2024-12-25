@@ -37,5 +37,8 @@ if [ ! -f "$vmaps_db_file" ]; then
     fi
 fi
 
+# 6. Set the permissions of the private folder.
+chown postfix:postfix -R /var/spool/postfix/private
+
 # 6. Start Postfix
 /usr/sbin/postfix start-fg -v

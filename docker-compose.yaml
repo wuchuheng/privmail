@@ -28,6 +28,7 @@ services:
     #   - ./data:/var/mail
       - ./:/app/:ro
       - ./src/postfix/vmaps:/etc/postfix/vmaps
+      - ./src/postfix/private/:/var/spool/postfix/private/
     networks:
       - mailnet
     depends_on:
@@ -59,16 +60,20 @@ services:
     image: my-dovecot:latest
     container_name: dovecot
     <<: *common-config
+    environment:
+      <<: *common_env
+    depends_on:
+      - postfix
     ports:
       - "143:143" # IMAP
       - "993:993" # IMAPS
     volumes:
-      # - ./data:/var/mail
       # - ./src/dovecot/start-dovecot.sh:/start-dovecot.sh
       # - ./src/letsencrypt/live/mail.wuchuheng.com/fullchain.pem:/etc/ssl/dovecot/fullchain.pem
       # - ./src/letsencrypt/live/mail.wuchuheng.com/privkey.pem:/etc/ssl/dovecot/privkey.pem
-      # - ./runtime/sockets/mail-services:/var/spool/postfix/private
+      - ./data:/var/mail
       - ./:/app/
+      - ./src/postfix/private/:/var/spool/postfix/private/
       - ./src/dovecot/config/:/etc/dovecot/
     restart: always
     networks:

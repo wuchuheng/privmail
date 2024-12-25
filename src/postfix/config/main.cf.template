@@ -704,3 +704,9 @@ alias_maps =lmdb:/etc/postfix/aliases
 alias_database =lmdb:/etc/postfix/aliases
 
 # virtual_mailbox_maps =lmdb:/etc/postfix/vmaps
+
+# DKIM Configuration
+milter_protocol = 2
+milter_default_action = accept
+smtpd_milters = inet:dkmi:8891
+non_smtpd_milters = inet:dkmi:8891

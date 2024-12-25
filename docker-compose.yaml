@@ -28,9 +28,6 @@ services:
     #   - ./data:/var/mail
       - ./:/app/:ro
       - ./src/postfix/vmaps:/etc/postfix/vmaps
-      #- ./src/postfix/config/aliases:/etc/postfix/aliases
-    #   - ./runtime/sockets/mail-services:/var/spool/postfix/private
-    #   - ./data/vmaps:/etc/postfix/vmaps
     networks:
       - mailnet
     depends_on:

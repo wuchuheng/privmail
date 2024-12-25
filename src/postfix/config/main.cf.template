@@ -710,3 +710,22 @@ milter_protocol = 2
 milter_default_action = accept
 smtpd_milters = inet:dkmi:8891
 non_smtpd_milters = inet:dkmi:8891
+
+# Virtual mailbox settings
+virtual_transport = lmtp:unix:private/dovecot-lmtp
+virtual_mailbox_domains = $myhostname
+virtual_mailbox_maps = hash:/etc/postfix/vmaps
+virtual_alias_maps = hash:/etc/postfix/virtual
+
+# Dovecot SASL authentication
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+smtpd_sasl_auth_enable = yes
+smtpd_tls_auth_only = yes
+smtpd_sasl_security_options = noanonymous
+
+# SMTP restrictions
+smtpd_recipient_restrictions =
+    permit_mynetworks,
+    permit_sasl_authenticated,
+    reject_unauth_destination

@@ -52,30 +52,28 @@ services:
     environment:
       <<: *common_env
 
-  # dovecot:
-  #   build:
-  #     context: ./src/dovecot
-  #     dockerfile: Dockerfile
-  #   image: my-dovecot:latest
-  #   container_name: dovecot
-  #   <<: *common-config
-  #   ports:
-  #     - "110:110"
-  #     - "143:143"
-  #     - "993:993"
-  #     - "995:995"
-  #   volumes:
-  #     - ./data:/var/mail
-  #     - ./src/dovecot/start-dovecot.sh:/start-dovecot.sh
-  #     - ./src/dovecot/config/:/etc/dovecot/
-  #     - ./src/letsencrypt/live/mail.wuchuheng.com/fullchain.pem:/etc/ssl/dovecot/fullchain.pem
-  #     - ./src/letsencrypt/live/mail.wuchuheng.com/privkey.pem:/etc/ssl/dovecot/privkey.pem
-  #     - ./runtime/sockets/mail-services:/var/spool/postfix/private
-  #   restart: always
-  #   networks:
-  #     - mailnet
-  #   command: ["/bin/sh", "/start-dovecot.sh"]
-  #   init: true
+  dovecot:
+    build:
+      context: ./src/dovecot
+      dockerfile: Dockerfile
+    image: my-dovecot:latest
+    container_name: dovecot
+    <<: *common-config
+    ports:
+      - "143:143" # IMAP
+      - "993:993" # IMAPS
+    volumes:
+      # - ./data:/var/mail
+      # - ./src/dovecot/start-dovecot.sh:/start-dovecot.sh
+      # - ./src/letsencrypt/live/mail.wuchuheng.com/fullchain.pem:/etc/ssl/dovecot/fullchain.pem
+      # - ./src/letsencrypt/live/mail.wuchuheng.com/privkey.pem:/etc/ssl/dovecot/privkey.pem
+      # - ./runtime/sockets/mail-services:/var/spool/postfix/private
+      - ./:/app/
+      - ./src/dovecot/config/:/etc/dovecot/
+    restart: always
+    networks:
+      - mailnet
+    command: ["/bin/sh", "/app/src/dovecot/start-dovecot.sh"]
 
 networks:
   mailnet:

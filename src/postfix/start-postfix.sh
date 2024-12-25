@@ -19,11 +19,20 @@ cat /app/src/postfix/config/aliases > /etc/postfix/aliases
 postalias /etc/postfix/aliases
 log INFO "Generated the aliases database."
 
-# 5. Genreate the vmaps.db file if it doesn't exist.
+# 5. Generate the vmaps.db file if it doesn't exist.
 vmaps_file="/etc/postfix/vmaps"
-if [ ! -f "$vmaps_file.db" ]; then
-    postmap "$vmaps_file"
-    log INFO "Generated the vmaps.db file."
+vmaps_db_file="${vmaps_file}.lmdb"
+if [ ! -f "$vmaps_db_file" ]; then
+    # Ensure proper permissions on the directory
+    chown postfix:postfix /etc/postfix
+    chmod 755 /etc/postfix
+    
+    # Generate the database as postfix user
+    postmap $vmaps_file
+    [ $? -eq 0 ] && log INFO "Generated the vmaps.lmdb file." || log ERROR "Failed to generate the vmaps.lmdb file."
+    
+    # Make the permissions as root:root to avoid the permission warning from Postfix when starting.
+    chown root:root -R /etc/postfix
 fi
 
 # 6. Start Postfix

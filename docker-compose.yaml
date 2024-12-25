@@ -68,9 +68,8 @@ services:
       - "143:143" # IMAP
       - "993:993" # IMAPS
     volumes:
-      # - ./src/dovecot/start-dovecot.sh:/start-dovecot.sh
-      # - ./src/letsencrypt/live/mail.wuchuheng.com/fullchain.pem:/etc/ssl/dovecot/fullchain.pem
-      # - ./src/letsencrypt/live/mail.wuchuheng.com/privkey.pem:/etc/ssl/dovecot/privkey.pem
+      - ./src/letsencrypt/live/${MAIL_DOMAIN}/fullchain.pem:/etc/ssl/dovecot/server.pem:ro
+      - ./src/letsencrypt/live/${MAIL_DOMAIN}/privkey.pem:/etc/ssl/dovecot/server.key:ro
       - ./data:/var/mail
       - ./:/app/
       - ./src/postfix/private/:/var/spool/postfix/private/
